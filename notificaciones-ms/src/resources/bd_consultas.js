@@ -44,7 +44,10 @@ const crear = (tabla, datos = {}, cb) => {
     SQL_crear = mysql.format(SQL_crear, [tabla, datos]);
 
     bd.query(SQL_crear, (error, result, fields) => {
-        if (error) cb(error);
+        if (error) {
+            cb(error);
+            return;
+        }
         cb(null, result);
     });
 
@@ -55,25 +58,43 @@ const leer = (tabla, campos = [], condiciones, cb) => {
         cb("Debe especificar una tabla");
         return;
     }
-    campos = campos[0] ? campos : "";
+
+    const values = [];
+    campos[0] ? values.push(campos) : null;
+    values.push(tabla);
     condiciones = condiciones || "";
-    let SQL_leer = "SELECT ?? FROM ?? " + (condiciones ? "WHERE ? " : "");
+
+    let SQL_leer = `SELECT ${campos[0] ? "??" : "*"} FROM ?? ${condiciones ? "WHERE " + condiciones : ""}`;
 
 
-    SQL_leer = mysql.format(SQL_leer, [campos, tabla, condiciones]);
+    SQL_leer = mysql.format(SQL_leer, values);
 
 
-    let consulta = bd.query(SQL_leer, (error, result, fields) => {
-        if (error) console.error(error);
-        cb(result);
+    bd.query(SQL_leer, (error, result, fields) => {
+        if (error) {
+            cb(error);
+            return;
+        }
+        cb(null, result);
     });
-
-    console.log(consulta.sql);
 
 }
 
-const actualizar = () => {
+const actualizar = (tabla, asignaciones, cb) => {
+    if (!tabla) {
+        cb("Agregue una tabla para actualizar");
+        return;
+    }
 
+    const SQL_actualizar = "";
+
+    bd.query(SQL_actualizar, asignaciones, (error, resultado) => {
+        if (error) {
+            cb(error);
+            return;
+        }
+        c
+    });
 }
 
 const eliminar = () => {
