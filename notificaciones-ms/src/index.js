@@ -12,7 +12,9 @@ app.use(morgan('dev'));
 // const data = {
 //     motivo: "reservación"
 // };
-bd.leer("motivo", [], null, (error, result) => {
+bd.leer(bd.tablas.notificaciones, [], null, (error, result) => {
+    if (error) console.error(error);
+
     console.log(result);
 });
 

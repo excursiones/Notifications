@@ -1,8 +1,11 @@
 const mysql = require('mysql');
 
 const bd_nombre = 'notificaciones_db';
-const t_notificaciones = "notificaciones";
-const t_motivo = "motivo";
+
+const tablas = {
+    notificaciones: "notificacion",
+    motivos: "motivo"
+}
 
 const bd_modulo = {};
 
@@ -62,7 +65,6 @@ const leer = (tabla, campos = [], condiciones, cb) => {
     const values = [];
     campos[0] ? values.push(campos) : null;
     values.push(tabla);
-    condiciones = condiciones || "";
 
     let SQL_leer = `SELECT ${campos[0] ? "??" : "*"} FROM ?? ${condiciones ? "WHERE " + condiciones : ""}`;
 
@@ -80,30 +82,53 @@ const leer = (tabla, campos = [], condiciones, cb) => {
 
 }
 
-const actualizar = (tabla, asignaciones, cb) => {
+const actualizar = (tabla, asignaciones, condiciones, cb) => {
     if (!tabla) {
         cb("Agregue una tabla para actualizar");
         return;
     }
 
-    const SQL_actualizar = "";
+    if (!asignaciones) {
+        cb("No hay asignaciones, Omitiendo Actualización a la tabla " + tabla);
+        return;
+    }
 
-    bd.query(SQL_actualizar, asignaciones, (error, resultado) => {
+    const values = [];
+    values.push(tabla);
+    values.push(asignaciones);
+
+    const SQL_actualizar = `UPDATE ?? SET ? ${condiciones ? "WHERE " + condiciones : ""}`;
+
+    bd.query(SQL_actualizar, values, (error, resultado) => {
         if (error) {
             cb(error);
             return;
         }
-        c
+        cb(null, resultado);
     });
 }
 
-const eliminar = () => {
+const eliminar = (tabla, condiciones, cb) => {
+    if (!tabla) {
+        cb("Agregue una tabla para actualizar");
+        return;
+    }
 
+    const SQL_actualizar = `DELETE FROM ?? ${condiciones ? "WHERE " + condiciones : ""}`;
+
+    bd.query(SQL_actualizar, tabla, (error, resultado) => {
+        if (error) {
+            cb(error);
+            return;
+        }
+        cb(null, resultado);
+    });
 }
 
 bd_modulo.crear = crear;
 bd_modulo.leer = leer;
 bd_modulo.actualizar = actualizar;
 bd_modulo.eliminar = eliminar;
+bd_modulo.tablas = tablas;
 
 module.exports = bd_modulo;
