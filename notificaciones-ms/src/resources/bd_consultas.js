@@ -26,8 +26,8 @@ const getConnection = () => {
             if (error) {
                 throw error;
             }
+            console.log("Conectado a ", bd_nombre);
         }, 3000);
-        console.log("Conectado a ", bd_nombre);
     });
 }
 

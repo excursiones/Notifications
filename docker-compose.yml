@@ -4,8 +4,7 @@ services:
   notificaciones-ms:
     build: ./notificaciones-ms
     env_file: 
-      - ./.env.node
-      - ./.env.database
+      - ./.env
     environment: 
       DB_HOST: notificaciones-db
     ports:
@@ -29,7 +28,7 @@ services:
       timeout: 5s
       retries: 15
     env_file: 
-      - ./.env.database
+      - ./.env
     ports: 
       - "3306:3306"
     restart: always
