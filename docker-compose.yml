@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+  notificaciones-ms:
+    build: ./notificaciones-ms
+    env_file: 
+      - ./.env.node
+      - ./.env.database
+    environment: 
+      DB_HOST: notificaciones-db
+    ports:
+      - "3000:3000"
+    depends_on: 
+      - notificaciones-db
+    healthcheck:
+      test: "curl -I notificaciones-ms:3000/notificaciones --fail"
+      interval: 20s
+      retries: 10
+    volumes: 
+      - ${PWD}/notificaciones-ms/src:/notificaciones-ms/src:ro
+    links: 
+      - notificaciones-db:notificaciones-db
+
+  notificaciones-db:
+    build: ./notificaciones-db/
+    healthcheck:
+      test: "mysqlcheck -u$$MYSQL_USER -p$$MYSQL_PASSWORD $$MYSQL_DATABASE"
+      interval: 20s
+      timeout: 5s
+      retries: 15
+    env_file: 
+      - ./.env.database
+    ports: 
+      - "3306:3306"
+    restart: always

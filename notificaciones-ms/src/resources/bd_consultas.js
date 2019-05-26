@@ -1,29 +1,38 @@
 const mysql = require('mysql');
-
 const bd_nombre = 'notificaciones_db';
 
 const tablas = {
-    notificaciones: "notificacion",
-    motivos: "motivo"
+    notificaciones: "notificaciones"
 }
 
 const bd_modulo = {};
 
 const bd_conf = {
-    host: 'localhost',
-    user: 'notificaciones_admin',
-    password: '1234',
-    database: bd_nombre
+    host: process.env.DB_HOST || "localhost",
+    user: process.env.MYSQL_USER || 'notificaciones_admin',
+    password: process.env.MYSQL_PASSWORD || "notificaciones_1234567890",
+    database: process.env.MYSQL_DATABASE || bd_nombre,
+    port: process.env.MYSQL_PORT || 3306,
+    dateStrings: true
 };
 
-const bd = mysql.createConnection(bd_conf);
+let bd = null, connection = null;
 
-bd.connect((error) => {
-    if (error) {
-        throw error;
-    }
-    console.log("Conectado a ", bd_nombre);
-});
+const getConnection = () => {
+    bd = mysql.createConnection(bd_conf);
+    setTimeout(() => {
+        console.log("Trying to connect to database")
+        connection = bd.connect((error) => {
+            if (error) {
+                throw error;
+            }
+        }, 3000);
+        console.log("Conectado a ", bd_nombre);
+    });
+}
+
+getConnection();
+
 
 
 //Queries CRUD

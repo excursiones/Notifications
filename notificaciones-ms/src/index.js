@@ -1,23 +1,24 @@
 const express = require('express');
 const morgan = require('morgan');
+const bodyParser = require('body-parser');
 
-const bd = require('./resources/bd_consultas');
+const servicios = require('./services/servicios');
 
+//creando servidor
 const app = express(); //Servidor Creado
 app.set('port', process.env.PORT || 3000);
 
-
+//midlewares
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(morgan('dev'));
 
-// const data = {
-//     motivo: "reservación"
-// };
-bd.leer(bd.tablas.notificaciones, [], null, (error, result) => {
-    if (error) console.error(error);
+for (const servicio in servicios) {
+    app.use(servicios[servicio]);
+}
 
-    console.log(result);
-});
 
+//servidor corriendo
 app.listen(app.get('port'), () => {
     console.log(`Servidor escuchando en el puerto ${app.get('port')}`);
 })
