@@ -1,0 +1,227 @@
+#Test with: http://editor.swagger.io/
+
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Microservicio para Notificaciones
+  description: Node JS + MySQL
+  license:
+    name: Arquitectura de Software 2019-I
+host: 192.168.99.101:3000
+basePath: /notificaciones
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /:
+    post:
+      summary: Crea una nueva notificación
+      operationId: crear_notificaciones
+      parameters:
+        - name: notificacion
+          in: body
+          required: true
+          description: Course Object
+          schema:
+            $ref: '#/definitions/NotificacionInput'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+    get:
+      summary: Retorna todas las notificaciones
+      operationId: obtener_notificaciones
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/ListaNotificaciones'
+        '406':
+          description: Not Acceptable (Invalid Params)
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+
+  /usuario/{id_usuario}:
+    get:
+      summary: Retorna todas las notificaciones de un usuario
+      operationId: obtener_notificacion_usuario
+      parameters:
+        - name: id_usuario
+          in: path
+          description: el id del usuario al cual se le buscan las notificaciones
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/ListaNotificaciones'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '406':
+            description: Not Acceptable (Invalid Params)
+            schema:
+              $ref: '#/definitions/ErrorModel'
+        '500':
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+            
+  /excursion/{id_excursion}:
+    get:
+      summary: Retorna todas las notificaciones de una excursión
+      operationId: obtener_notificacion_excursion
+      parameters:
+        - name: id_excursion
+          in: path
+          description: el id de la excursion a la cúal se le buscan las notificaciones
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/ListaNotificaciones'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '406':
+            description: Not Acceptable (Invalid Params)
+            schema:
+              $ref: '#/definitions/ErrorModel'
+        '500':
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+
+  /eliminar/{id}:
+    delete: 
+      summary: Elimina una notificacion
+      operationId: eliminar_notificacion
+      parameters:
+        - name: id
+          in: path
+          description: El codigo de la notificacion a eliminar
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Ok
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '406':
+            description: Not Acceptable (Invalid Params)
+            schema:
+              $ref: '#/definitions/ErrorModel'
+        '500':
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+            
+  /fecha:
+    get:
+      summary: Retorna las notificaciones por fecha
+      operationId: obtener_notificacion_fecha
+      parameters:
+        - name: fecha
+          in: body
+          description: La o las fechas para buscar notificaciones
+          required: true
+          schema:
+            $ref: '#/definitions/Fecha'
+      responses:
+        '200':
+          description: Ok
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '406':
+            description: Not Acceptable (Invalid Params)
+            schema:
+              $ref: '#/definitions/ErrorModel'
+        '500':
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+
+definitions:
+
+  # Notificaciones
+  Notificacion:
+    type: object
+    properties:
+      id:
+        type: integer
+      fecha:
+        type: string
+      activa:
+        type: integer
+      motivo:
+        type: string
+      id_usuario:
+        type: integer
+      id_excursion:
+        type: integer
+
+  NotificacionInput:
+    type: object
+    properties:
+      fecha:
+        type: string
+      activa:
+        type: integer
+      motivo:
+        type: string
+      id_usuario:
+        type: integer
+      id_excursion:
+        type: integer
+        
+  Fecha:
+    type: object
+    properties:
+      fecha:
+        type: string
+      fecha1:
+        type: string
+      fecha2:
+        type: string  
+
+  ListaNotificaciones:
+    type: array
+    items:
+      $ref: '#/definitions/Notificacion'
+
+# Errors
+  ErrorModel:
+    type: object
+    required:
+      - message
+      - code
+    properties:
+      message:
+        type: string
+      code:
+        type: number
+      description:
+        type: object

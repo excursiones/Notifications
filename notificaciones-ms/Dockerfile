@@ -4,5 +4,4 @@ WORKDIR ${work_dir}
 COPY ["package.json", "package-lock.json*", "${work_dir}/"]
 RUN cd ${work_dir} && npm install
 COPY . ${work_dir}/
-EXPOSE 3000
 CMD ["npm", "start"]

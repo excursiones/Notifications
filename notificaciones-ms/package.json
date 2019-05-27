@@ -2,9 +2,9 @@
   "name": "notificaciones-ms",
   "version": "1.0.0",
   "description": "microservicio de notificaciones del sistema de Excursiones",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "start": "nodemon src/index.js"
+    "start": "node src/index.js"
   },
   "author": "",
   "license": "ISC",
@@ -13,7 +13,8 @@
     "custom-env": "^1.0.1",
     "express": "^4.17.0",
     "morgan": "^1.9.1",
-    "mysql": "^2.17.1"
+    "mysql": "^2.17.1",
+    "nodemailer": "^6.2.1"
   },
   "devDependencies": {
     "nodemon": "^1.19.0"

@@ -7,7 +7,10 @@ const bd = require('../resources/bd_consultas');
 enrutador.get(rutas.obtener_notificaciones, (req, res) => {
 
     bd.leer(bd.tablas.notificaciones, [], null, (error, result) => {
-        if (error) { throw error; return; }
+        if (error) {
+            console.error(error);
+            return;
+        }
         res.json(result);
     })
 });

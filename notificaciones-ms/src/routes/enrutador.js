@@ -1,4 +1,4 @@
 const { Router } = require('express');
-const enrutador = Router({ strict: true });
+const enrutador = Router();
 
 module.exports = enrutador;

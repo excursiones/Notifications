@@ -8,20 +8,20 @@ const tablas = {
 const bd_modulo = {};
 
 const bd_conf = {
-    host: process.env.DB_HOST || "localhost",
-    user: process.env.MYSQL_USER || 'notificaciones_admin',
-    password: process.env.MYSQL_PASSWORD || "notificaciones_1234567890",
-    database: process.env.MYSQL_DATABASE || bd_nombre,
-    port: process.env.MYSQL_PORT || 3306,
+    host: process.env.DB_HOST,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE,
+    port: process.env.MYSQL_PORT,
     dateStrings: true
 };
 
 let bd = null, connection = null;
 
-const getConnection = () => {
+const Coneccion = () => {
     bd = mysql.createConnection(bd_conf);
     setTimeout(() => {
-        console.log("Trying to connect to database")
+        console.log("Intentando conectar a la base de datos...");
         connection = bd.connect((error) => {
             if (error) {
                 throw error;
@@ -31,9 +31,7 @@ const getConnection = () => {
     });
 }
 
-getConnection();
-
-
+Coneccion();
 
 //Queries CRUD
 
@@ -124,7 +122,6 @@ const eliminar = (tabla, condiciones, cb) => {
     }
 
     const SQL_actualizar = `DELETE FROM ?? ${condiciones ? "WHERE " + condiciones : ""}`;
-
     bd.query(SQL_actualizar, tabla, (error, resultado) => {
         if (error) {
             cb(error);

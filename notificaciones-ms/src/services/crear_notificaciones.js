@@ -6,7 +6,7 @@ const enrutador = require('../routes/enrutador');
 
 enrutador.post(rutas.crear_notificacion, (req, res) => {
     bd.crear(bd.tablas.notificaciones, req.body, (error, resultado) => {
-        if (error) { throw error; return; }
+        if (error) { console.error(error); return; }
         res.send(resultado);
     });
 });

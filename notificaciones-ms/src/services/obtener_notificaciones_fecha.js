@@ -5,26 +5,65 @@ const enrutador = require('../routes/enrutador');
 const bd = require('../resources/bd_consultas');
 
 enrutador.get(rutas.obtener_notificacion_fecha, (req, res) => {
-    let condiciones = null;
-    let params = {};
-    console.log(req.body);
+    const { fecha } = req.body;
+    let aux;
 
-    params = Object.assign(params, req.query);
-    params = Object.assign(params, req.params);
-    params = Object.assign(params, req.body);
-    for (const param in params) {
-        if (params.hasOwnProperty(param)) {
-            const condicion = params[param];
-
-            condiciones == null ? condiciones = "" : null;
-            condiciones += param + " = " + condicion;
+    fecha ? (fecha.split(" ").length == 1 ? bd.leer(bd.tablas.notificaciones, [], (`DATE(fecha) = "${fecha}"`), (error, result) => {
+        if (error) {
+            console.error(error);
+            return;
         }
-    }
-
-    bd.leer(bd.tablas.notificaciones, [], condiciones, (error, result) => {
-        if (error) { throw error; return; }
         res.json(result);
-    })
+    }) : bd.leer(bd.tablas.notificaciones, [], (`fecha = "${fecha}"`), (error, result) => {
+        if (error) {
+            console.error(error);
+            return;
+        }
+        res.json(result);
+    })) : null;
+
+    const { fecha1, fecha2 } = req.body;
+
+    (fecha1 && fecha2) ? (
+        fecha1.split(" ").length == 1 ? (
+            fecha2.split(" ").length == 1 ? (
+                bd.leer(bd.tablas.notificaciones, [], (`DATE(fecha) BETWEEN "${fecha1}" AND "${fecha2}"`), (error, result) => {
+                    if (error) {
+                        console.error(error);
+                        return;
+                    }
+                    res.json(result);
+                })
+            ) : (
+                    bd.leer(bd.tablas.notificaciones, [], (`DATE(fecha) >= "${fecha1} AND fecha <="${fecha2}"`), (error, result) => {
+                        if (error) {
+                            console.error(error);
+                            return;
+                        }
+                        res.json(result);
+                    })
+                )
+        ) : (
+                fecha2.split(" ").length == 1 ? (
+                    bd.leer(bd.tablas.notificaciones, [], (`fecha >= "${fecha1}" AND DATE(FECHA) <= "${fecha2}"`), (error, result) => {
+                        if (error) {
+                            console.error(error);
+                            return;
+                        }
+                        res.json(result);
+                    })
+                ) : (
+                        bd.leer(bd.tablas.notificaciones, [], (`fecha BETWEEN "${fecha}" AND "${fecha2}"`), (error, result) => {
+                            if (error) {
+                                console.error(error);
+                                return;
+                            }
+                            res.json(result);
+                        })
+                    )
+            )
+    ) : (null)
+
 });
 
 module.exports = enrutador;

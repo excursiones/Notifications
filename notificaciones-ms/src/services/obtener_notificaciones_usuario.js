@@ -21,7 +21,10 @@ enrutador.get(rutas.obtener_notificacion_usuario, (req, res) => {
     }
 
     bd.leer(bd.tablas.notificaciones, [], condiciones, (error, result) => {
-        if (error) { throw error; return; }
+        if (error) {
+            console.error(error);
+            return;
+        }
         res.json(result);
     })
 });

@@ -8,7 +8,7 @@ services:
     environment: 
       DB_HOST: notificaciones-db
     ports:
-      - "3000:3000"
+      - ${APP_PORT}:${APP_PORT}
     depends_on: 
       - notificaciones-db
     healthcheck:
@@ -19,6 +19,7 @@ services:
       - ${PWD}/notificaciones-ms/src:/notificaciones-ms/src:ro
     links: 
       - notificaciones-db:notificaciones-db
+    restart: on-failure
 
   notificaciones-db:
     build: ./notificaciones-db/
@@ -29,6 +30,8 @@ services:
       retries: 15
     env_file: 
       - ./.env
+    volumes: 
+      - ${MYSQL_DATA_VOLUME}:/var/lib/mysql
     ports: 
-      - "3306:3306"
+      - ${MYSQL_PORT}:3306
     restart: always

@@ -6,7 +6,7 @@ const servicios = require('./services/servicios');
 
 //creando servidor
 const app = express(); //Servidor Creado
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.APP_PORT);
 
 //midlewares
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -16,7 +16,6 @@ app.use(morgan('dev'));
 for (const servicio in servicios) {
     app.use(servicios[servicio]);
 }
-
 
 //servidor corriendo
 app.listen(app.get('port'), () => {

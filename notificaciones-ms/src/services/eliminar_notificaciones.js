@@ -14,7 +14,7 @@ enrutador.delete(rutas.eliminar_notificacion, (req, res) => {
     }
     const condicion = "id = " + req.params["id"];
     bd.eliminar(bd.tablas.notificaciones, condicion, (error, result) => {
-        if (error) { throw error; return; }
+        if (error) { console.error(error); return; }
         res.json(result);
     })
 });
