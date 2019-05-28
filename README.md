@@ -2,7 +2,7 @@
 
 ## Configurar variables de entorno.
 
-Ubicarse en la raiz del proyecto y creay y configurar el archivo .env
+Ubicarse en la raiz del proyecto, crear y configurar el archivo .env
 
 `touch .env`\
 `nano .env`
