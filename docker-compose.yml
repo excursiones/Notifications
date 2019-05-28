@@ -1,4 +1,4 @@
-version: '3.7'
+version: '2.1'
 
 services:
   notificaciones-ms:
@@ -6,19 +6,18 @@ services:
     env_file: 
       - ./.env
     environment: 
-      DB_HOST: notificaciones-db
+      DB_HOST: notificaciones-db # Al desplegarse en docker-machine, toca cambiar la ip a la de la maquina virtual
     ports:
       - ${APP_PORT}:${APP_PORT}
     depends_on: 
-      - notificaciones-db
+      notificaciones-db:
+        condition: service_healthy
     healthcheck:
       test: "curl -I notificaciones-ms:3000/notificaciones --fail"
       interval: 20s
       retries: 10
-    volumes: 
-      - ${PWD}/notificaciones-ms/src:/notificaciones-ms/src:ro
     links: 
-      - notificaciones-db:notificaciones-db
+      - notificaciones-db
     restart: on-failure
 
   notificaciones-db:

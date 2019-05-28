@@ -2,9 +2,9 @@
   "name": "notificaciones-ms",
   "version": "1.0.0",
   "description": "microservicio de notificaciones del sistema de Excursiones",
-  "main": "src/index.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node ./src/index.js"
   },
   "author": "",
   "license": "ISC",

@@ -24,7 +24,8 @@ const Coneccion = () => {
         console.log("Intentando conectar a la base de datos...");
         connection = bd.connect((error) => {
             if (error) {
-                throw error;
+                console.error(error);
+                return;
             }
             console.log("Conectado a ", bd_nombre);
         }, 3000);
