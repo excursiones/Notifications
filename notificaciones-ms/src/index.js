@@ -11,7 +11,6 @@ app.set('port', process.env.APP_PORT);
 //midlewares
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(morgan('dev'));
 
 for (const servicio in servicios) {
     app.use(servicios[servicio]);
@@ -19,7 +18,7 @@ for (const servicio in servicios) {
 
 //servidor corriendo
 app.listen(app.get('port'), () => {
-    console.log(`Servidor escuchando en el puerto ${app.get('port')}`);
+    console.log(`Servidor corriendo en el puerto ${app.get('port')}`);
 })
 
 // run with nodemon src/index.js
