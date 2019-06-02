@@ -21,7 +21,6 @@ let bd = null, connection = null;
 const Coneccion = () => {
     bd = mysql.createConnection(bd_conf);
     setTimeout(() => {
-        console.log("Intentando conectar a la base de datos...");
         connection = bd.connect((error) => {
             if (error) {
                 console.error(error);

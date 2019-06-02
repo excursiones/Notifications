@@ -11,7 +11,7 @@ services:
       notificaciones-db:
         condition: service_healthy
     healthcheck:
-      test: "curl -I notificaciones-ms:3000/notificaciones --fail"
+      test: "curl -I notificaciones-ms:${APP_PORT}/notificaciones --fail"
       interval: 20s
       retries: 10
     links: 
@@ -19,7 +19,8 @@ services:
     restart: on-failure
 
   notificaciones-db:
-    build: ./notificaciones-db/
+    # build: ./notificaciones-db/
+    image: mariadb:10.3.14
     healthcheck:
       test: "mysqlcheck -u$$MYSQL_USER -p$$MYSQL_PASSWORD $$MYSQL_DATABASE"
       interval: 20s
@@ -28,6 +29,7 @@ services:
     env_file: 
       - ./.env
     volumes: 
+      - ./notificaciones-db/SQL_Script.sql:/docker-entrypoint-initdb.d/SQL_Script.sql
       - ${MYSQL_DATA_VOLUME}:/var/lib/mysql
     ports: 
       - ${MYSQL_PORT}:3306
