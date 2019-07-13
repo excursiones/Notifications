@@ -3,15 +3,24 @@ version: '2.1'
 services:
   notificaciones-ms:
     build: ./notificaciones-ms
-    env_file: 
-      - ./.env
+    environment:
+      DB_HOST: notificaciones-db
+      NODE_ENV: development
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: notificaciones_bd
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: 1234
+      EMAIL_ADMIN: asexcursionesmailer@gmail.com
+      EMAIL_PASSWORD_ADMIN: excursiones_admin_123456
+      MYSQL_PORT: 3306
+      APP_PORT: 5000
     ports:
-      - ${APP_PORT}:${APP_PORT}
+      - 5000:5000
     depends_on: 
       notificaciones-db:
         condition: service_healthy
     healthcheck:
-      test: "curl -I notificaciones-ms:${APP_PORT}/notificaciones --fail"
+      test: "curl -I notificaciones-ms:5000/notificaciones --fail"
       interval: 20s
       retries: 10
     links: 
@@ -26,11 +35,15 @@ services:
       interval: 20s
       timeout: 5s
       retries: 15
-    env_file: 
-      - ./.env
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: notificaciones_bd
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: 1234
+      MYSQL_DATA_VOLUME: notificaciones-db
     volumes: 
       - ./notificaciones-db/SQL_Script.sql:/docker-entrypoint-initdb.d/SQL_Script.sql
-      - ${MYSQL_DATA_VOLUME}:/var/lib/mysql
+      - ./notificaciones-db/data:/var/lib/mysql
     ports: 
-      - ${MYSQL_PORT}:3306
+      - 3306:3306
     restart: always
